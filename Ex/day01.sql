@@ -86,3 +86,21 @@ select first_name, last_name,
 	   concat(first_name, ' ', last_name) '전체-이름(성 이름)', -- Steven King 같은 컬럼
 	   concat('이름  ', first_name, ' ', last_name, '       입사일  ', hire_date) '전체정보' -- Steven King hire date is 1987-06-17 같은 컬럼
 from employees; 
+
+/*
+전체직원의 정보를 다음과 같이 출력하세요
+성명(first_name last_name)
+성과 이름사이에 – 로 구분 ex) William-Gietz
+월급
+연봉(급여*12)
+보너스(급여*12+5000)
+전화번호
+*/
+
+select concat(first_name, '-', last_name),
+	   salary  월급,
+       salary * 12  연봉,
+       salary * 12+5000  보너스,
+       phone_number 전화번호
+from employees;
+
