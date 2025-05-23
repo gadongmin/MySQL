@@ -245,7 +245,7 @@ order by 	first_name asc
 
 -- 직원의 이름, 급여, 입사일을 입사일이 빠른 사람 부터 출력하세요
 select 		first_name
-				, salary
+				,salary
                 ,hire_date
 from 		employees
 order by 	hire_date asc
