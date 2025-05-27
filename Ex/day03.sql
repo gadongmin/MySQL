@@ -213,8 +213,8 @@ select 	current_timestamp()
 from dual
 ;
 
--- ADDDATE() 또는 DATE_ADD(): 날짜 시간 더하기
--- SUBDATE() 또는 DATE_SUB(): 날짜 시간 빼기
+-- ADDDATE() 또는 DATE_ADD(): 날짜 시간 더하기, 음수로 넣으면 빼기 효과
+-- SUBDATE() 또는 DATE_SUB(): 날짜 시간 빼기, 음수로 넣으면 더하기 효과
 
 select 	adddate('2021-06-20 00:00:00', INTERVAL 1 YEAR)		-- 1년 후, '2022-06-20 00:00:00' 
 		,adddate('2021-06-20 00:00:00', INTERVAL 1 MONTH)	-- 1달 후, '2021-07-20 00:00:00' 
@@ -225,3 +225,109 @@ select 	adddate('2021-06-20 00:00:00', INTERVAL 1 YEAR)		-- 1년 후, '2022-06-2
 		,adddate('2021-06-20 00:00:00', INTERVAL 1 SECOND)	-- 1초 후, '2021-06-20 00:00:01' 
 from dual
 ;
+
+select 	subdate('2021-06-20 00:00:00', INTERVAL 1 YEAR)		-- 1년 전, '2020-06-20 00:00:00' 
+		,subdate('2021-06-20 00:00:00', INTERVAL 1 MONTH)	-- 1달 전, '2021-05-20 00:00:00' 
+		,subdate('2021-06-20 00:00:00', INTERVAL 1 WEEK)	-- 1주 전, '2021-06-13 00:00:00' 
+		,subdate('2021-06-20 00:00:00', INTERVAL 1 DAY)		-- 1일 전, '2021-06-19 00:00:00' 
+		,subdate('2021-06-20 00:00:00', INTERVAL 1 HOUR)	-- 1시간 전, '2021-06-19 23:00:00' 
+		,subdate('2021-06-20 00:00:00', INTERVAL 1 MINUTE)	-- 1분 전, '2021-06-19 23:59:00' 
+		,subdate('2021-06-20 00:00:00', INTERVAL 1 SECOND)	-- 1초 전, '2021-06-19 23:59:59' 
+from dual
+;
+
+-- DATEDIFF(): 두 날짜간 일수차
+-- TIMEDIFF(): 두 날짜시간 간 시간차
+select 	datediff('2021-06-21 01:05:05', '2021-06-21 01:00:00')  
+		,timediff('2021-06-21 01:05:05', '2021-06-20 01:00:00')
+from dual
+;
+
+select 	datediff('2025-09-05', '2025-03-27')  
+from dual
+;
+
+-- 현재까지 근무년수
+select 	first_name
+        ,datediff(now(), hire_date) / 365
+		,ceil(datediff(now(), hire_date) / 365)
+        ,concat(ceil(datediff(now(), hire_date) / 365), '년차')
+from employees
+;
+
+/**************************************************************
+-- 단일행 함수
+**************************************************************/
+-- 변환함수
+-- 날짜(시간) → 문자열, DATE_FORMAT(date, format) : date를 format형식으로 변환
+select 	now()
+		,date_format(now(), '%y.%m.%d(%a) %H:%i:%s')
+		,date_format(now(), '%Y년 %m월 %d일(%W) %h시 %i분 %s초(%p)')
+        ,date_format(now(), '%y%m%d%h%i%s')
+from dual
+;
+
+-- 변환함수: 문자열 → 날짜(시간), STR_TO_DATE(str, format) : str를 format형식으로 변환
+select 	datediff('2021-06-04', '2021-06-01') -- 문자열로 인식되면 계산이 안되지만, 자동으로 날짜로 변환되어 계산됨
+		,datediff('2021-Jun-04', '2021-06-01') -- 문자열로 인식되어 계산불가
+from dual
+;
+
+select str_to_date('2021-Jun-04 07:48:52', '%Y-%b-%d') -- 월이 문자로 표현되어, %M(월 이름),b(축약된 월 이름)로 설정해야 변환가능
+from dual
+;
+
+select str_to_date('2021-06-01 12:30:05', '%Y-%m-%d')
+from dual
+;
+
+select 	concat(
+			datediff( -- 일수 차
+				str_to_date('2021-Jun-04 07:48:52', '%Y-%b-%d') -- 2021-06-04 07:48:58
+				,str_to_date('2021-06-01 12:30:05', '%Y-%m-%d') -- 2021-06-01 12:30:05
+			), '일'
+        )
+; -- 3일
+
+-- FORMAT(숫자, p) : 숫자에 콤마(,) 를 추가, 소수점 p자리까지 출력
+SELECT 	format(1234567, 0)
+		,format(1234567.89, 0) -- 정수로 표현, 소수점 1번째에서 반올림
+		,format(1234567.89128, 4) -- 소수점 4번째까지 출력, , 소수점 5번째에서 반올림
+        ,format(1234567.89128, -5) -- 음수는 소수점 1번째에서 반올림
+from dual
+;
+
+-- CAST(expression AS type): expression을 type형식으로 변환
+-- 숫자 → 문자열
+select cast(1234567.89 as char)
+from dual
+;
+
+-- 날짜 → 문자열
+select cast('2024-01-10' as char)
+from dual
+;
+
+-- 문자열 → 숫자 unsigned
+SELECT cast('1234' as unsigned)
+from dual
+;
+
+-- 문자열 → 날짜
+select cast('2024-01-10' as date)
+from dual
+;
+
+-- IFNULL(컬럼명, null일때값): 컬럼의 값이 null일때 정해진값을 출력
+select 	commission_pct
+		,ifnull(commission_pct, 0)
+from employees;
+
+select 	commission_pct
+		,ifnull(commission_pct, "없음")
+from employees;
+
+select 	first_name
+		,manager_id
+		,ifnull(manager_id, "매니저 없음")
+from employees;
