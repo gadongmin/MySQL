@@ -165,3 +165,28 @@ from 			 employees e
 left outer join  departments d
 			 on  e.department_id = d.department_id
 );
+
+/**************************************************************
+-- Self join
+**************************************************************/
+-- 본인 이름, 본인 전화번호, 본인 이메일 / 매니저 이름, 매니저 전화번호, 매니저 이메일
+select 	e.first_name	이름	
+		,e.phone_number 전화번화
+        ,e.email		이메일
+        ,m.first_name	매니저
+from 	employees e
+		,employees m
+where 	e.manager_id = m.employee_id
+;
+
+-- null까지 출력
+select 			e.first_name	이름	
+				,e.phone_number 전화번화
+				,e.email		이메일
+                ,m.employee_id  '매니저 아이디'
+				,m.first_name	'매니저 이름'
+                ,m.phone_number	'매니저 전화번화'
+from 			employees e
+left outer join	employees m
+			 on	e.manager_id = m.employee_id
+;

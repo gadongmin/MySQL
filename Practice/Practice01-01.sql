@@ -124,6 +124,12 @@ order by country_name asc
 입사일이 03/12/31 일 이전 입사한 직원의 이름, 월급, 전화 번호, 입사일을 출력하세요
 전화번호는 545-343-3433 과 같은 형태로 출력하시오.
 */
-select *
+select first_name					이름
+		,salary						월급
+        ,replace(
+			phone_number, '.', '-'
+		) 							전화번호
+        ,hire_date					입사일
 from employees
+where hire_date >= 03/12/31 
 ;
