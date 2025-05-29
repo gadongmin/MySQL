@@ -125,3 +125,45 @@ having		sum(salary) >= 20000 -- 월급 합계가 20000 이상
 and			department_id >= 100 -- 부서번호가 100 이상
 order by	department_id asc
 ;
+
+/**************************************************************
+-- IF ~ ELSE 문IF(조건문, 참일때값, 거짓일때값)
+**************************************************************/
+-- 모든 직원의 이름, 월급, 수당, 상태(state)을 출력하세요
+-- 상태컬럼은 수당이 없으면 0, 수당이 있으면 1 을 state 컬럼에 표시하세요
+select	first_name
+		,salary
+        ,commission_pct
+		,if(commission_pct is null, 0, 1) state -- if 파라미터(조건식, 참, 거짓)
+        ,ifnull(commission_pct, '없음') 'ifnull()' -- ifnull 파라미터(조건식, 값)
+from 	employees
+;
+
+/**************************************************************
+-- CASE ~ END 문: if~else if~else if~else 유사
+**************************************************************/
+-- 직원아이디, 월급, 업무아이디, 실제월급(realSalary)을 출력하세요.
+-- 실제월급은 job_id 가 'AC_ACCOUNT'면 월급 + 월급 * 0.1, 'SA_REP'면 월급 + 월급 * 0.2, 'ST_CLERK'면 월급 + 월급 * 0.3 그 외에는 월급으로 계산하세요
+select 	employee_id 직원아이디
+		,salary 	월급
+ 		,job_id 	업무아이디
+        ,case when job_id = 'ac_account' then salary + salary * 0.1
+		      when job_id = 'sa_rep' 	 then salary + salary * 0.2
+			  when job_id = 'st_clerk' 	 then salary + salary * 0.3
+              else salary
+		end as '실수령 금액'
+from 	employees
+;
+
+-- 직원의 이름, 부서번호, 팀을 출력하세요 
+-- 팀은 코드로 결정하며 부서코드가 10 ~ 50 이면 'A-TEAM' / 60 ~ 100이면 'B-TEAM' / 110 ~ 150이면 'C-TEAM' / 나머지는 '팀없음' 으로 출력하세요.
+select 	first_name 		이름
+		,department_id 	부서번호
+        ,case 	when department_id >= 10 	and department_id <= 50 	then 'A-TEAM'
+				when department_id >= 60 	and department_id <= 100 	then 'B-TEAM'
+				when department_id >= 110 	and department_id <= 150 	then 'C-TEAM'
+				else '팀 없음'
+		end	팀
+from 	employees
+order by department_id asc
+;
