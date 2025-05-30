@@ -173,3 +173,54 @@ where 	e.department_id = s.department_id
 and		e.salary = s.salary
 ;
 
+/**************************************************************
+-- limit
+**************************************************************/
+-- 직원관리 페이지
+-- 사번이 작은 직원이 위쪽에 출력
+-- 자동정렬
+select 	 employee_id
+		 ,first_name
+         ,salary
+from 	 employees
+order by employee_id asc
+limit 	 0, 10 -- 1번부터 10개
+;
+
+-- 07년에 입사한 직원중 급여가 많은 직원중 3에서 7등의 이름 급여 입사일은?
+select 	 first_name	이름
+		 ,salary	급여
+         ,hire_date	입사일
+from 	 employees
+where 	 date_format(hire_date, '%Y') = 2007
+order by salary desc
+limit 	 2,6
+;
+
+-- 부서번호가 100인 직원 중 급여를 가장 많이 받은 직원의 이름, 급여, 부서번호를 출력하세요
+select max(salary)
+from employees
+where department_id = 100
+group by department_id
+;
+
+select 	first_name 		이름
+		,salary			급여
+        ,department_id	부서번호
+from 	employees
+where 	(department_id, salary) in (select	 department_id
+											 ,max(salary)
+									from 	 employees
+                                    where 	 department_id = 100
+									group by department_id)
+;
+
+-- limit 사용
+select   first_name 		이름
+		 ,salary			급여
+         ,department_id		부서번호
+from 	 employees
+where 	 department_id = 100
+order by salary desc
+limit 	 0,1
+;
