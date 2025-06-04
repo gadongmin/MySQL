@@ -1,5 +1,5 @@
 -- ----------------------------------------------------------------------------------------
--- web 계정
+-- web 계정 01
 -- ----------------------------------------------------------------------------------------
 -- 테이블 만들기
 create table book(
@@ -40,6 +40,8 @@ insert into author
 values(1,'박경리','토지 작가');
 insert into author 
 values(3,'정우성','');
+insert into author 
+values(4,'이효리',null);
 
 -- 명시적 방법
 insert into author(author_id, author_name) 
