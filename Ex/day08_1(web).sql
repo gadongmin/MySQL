@@ -55,6 +55,6 @@ select * from book;
 -- 전체 조회
 select *
 from   book b
-	   ,author a
-where  b.author_id = a.author_id
+join   author a
+  on   b.author_id = a.author_id
 ;     
