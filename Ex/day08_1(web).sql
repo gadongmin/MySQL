@@ -11,7 +11,7 @@ create table book(
 	book_id   int 			primary key 	auto_increment
     ,title 	  varchar(100) 	not null
     ,pubs 	  varchar(100)
-    ,pub_data datetime
+    ,pub_date datetime
     ,author_id int
     ,constraint book_fk 
     foreign key	(author_id) 
@@ -53,8 +53,14 @@ select * from author;
 select * from book;
 
 -- 전체 조회
-select *
-from   book b
-join   author a
-  on   b.author_id = a.author_id
+select  b.book_id
+		,b.title
+        ,b.pubs
+        ,date_format(b.pub_date, '%Y-%m-%d') as pub_date
+        ,a.author_id
+        ,a.author_name
+        ,author_desc
+from    book b
+join    author a
+  on    b.author_id = a.author_id
 ;     
